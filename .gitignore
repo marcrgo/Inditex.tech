@@ -1,0 +1,4 @@
+.venv
+random*
+pyproject.toml
+poetry.lock

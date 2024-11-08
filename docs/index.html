@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Descifrador AES</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    label, input, textarea {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result, #result2 {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 500px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+  <h1>Descifrador AES</h1>
+  <form id="decryptionForm">
+    <label for="aesKey">Clave AES:</label>
+    <input type="text" id="aesKey" name="aesKey" placeholder="aesEncryptionKey" value="aesEncryptionKey">
+
+    <label for="iv">Vector Inicialización:</label>
+    <input type="text" id="iv" name="iv" placeholder="encryptionIntVec" value="encryptionIntVec">
+
+    <label for="userDump">Dump de Usuarios:</label>
+    <textarea id="userDump" name="userDump" rows="5" cols="40"></textarea>
+
+    <button type="button" id="decryptBtn">Descifrar</button>
+    <button type="button" id="cryptBtn">Cifrar</button>
+  </form>
+
+  <div id="result"></div>
+
+  <h1>Decodificador Base64</h1>
+  <form id="decodeForm">
+    <label for="base64">Password Base64</label>
+    <input type="text" id="base64" name="base64">
+
+    <button type="button" id="decodeBtn">Decodifica</button>
+  </form>
+
+  <div id="result2"></div>
+
+  <script>
+    document.getElementById('cryptBtn').addEventListener('click', function() {
+      const aesKey = document.getElementById('aesKey').value;
+      const iv = document.getElementById('iv').value;
+      const userDump = document.getElementById('userDump').value.split('\n');
+
+      let encryptedData = '';
+
+      userDump.forEach((line) => {
+        if (line.trim() !== '') {
+          try {
+            var plainText = line.trim();
+            var username = "";
+            if (plainText.indexOf(":") > -1){
+              username = plainText.split(":")[0] + ":"
+              plainText = plainText.split(":")[1]
+            }
+
+            const encrypted = CryptoJS.AES.encrypt(
+              plainText,
+              CryptoJS.enc.Utf8.parse(aesKey),
+              { iv: CryptoJS.enc.Utf8.parse(iv), mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+            );
+            
+            encryptedData += username + encrypted.toString() + '\n';
+          } catch (error) {
+            encryptedData += `Error al cifrar la línea: ${error}\n` ;
+          }
+        }
+      });
+
+      document.getElementById('result').innerText = encryptedData;
+    });
+
+    document.getElementById('decryptBtn').addEventListener('click', function() {
+      const aesKey = document.getElementById('aesKey').value;
+      const iv = document.getElementById('iv').value;
+      const userDump = document.getElementById('userDump').value.split('\n');
+
+      let decryptedData = '';
+
+      userDump.forEach((line) => {
+        if (line.trim() !== '') {
+          try {
+            var encryptedText = line.trim();
+            var username = "";
+            if (encryptedText.indexOf(":") > -1){
+              username = encryptedText.split(":")[0] + ":"
+              encryptedText = encryptedText.split(":")[1]
+            }
+
+            const decrypted = CryptoJS.AES.decrypt(
+              { ciphertext: CryptoJS.enc.Base64.parse(encryptedText) },
+              CryptoJS.enc.Utf8.parse(aesKey),
+              { iv: CryptoJS.enc.Utf8.parse(iv), mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+            );
+            decryptedData += username + decrypted.toString(CryptoJS.enc.Utf8) + '\n';
+          } catch (error) {
+            decryptedData += 'Error al descifrar la línea\n';
+          }
+        }
+      });
+
+      document.getElementById('result').innerText = decryptedData;
+    });
+
+    document.getElementById('decodeBtn').addEventListener('click', function() {
+
+      const decode = document.getElementById('base64').value;
+      document.getElementById('result2').innerText = atob(decode);
+    });
+
+  </script>
+</body>
+</html>
