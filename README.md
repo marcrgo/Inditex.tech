@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://challenge-itx.qaz.pw/">
+  <a href="https://zaraboost.azurewebsites.net/">
     <img src="images/logo.png" alt="Logo" width=100 height=100>
   </a>
 

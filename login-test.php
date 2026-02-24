@@ -1,6 +1,5 @@
 <?php
-// Substituir por las credenciales que se pueden obtener del fichero de pruebas users.dump
-// Descifrar las passwords usando AES 128 CBC con la clave "aesEncryptionKey" y el vector de inicialización "encryptionIntVec" en https://www.javainuse.com/aesgenerator
+
 $hardcodedUser = '';
 $hardcodedPass = '';
  
@@ -13,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user === $hardcodedUser && $pass === $hardcodedPass) {
         echo "Login exitoso. Redirigiendo...";
         // Redireccionar a la URL
-        header('Location: https://challenge-itx.qaz.pw');
+        header('Location: https://zaraboost.azurewebsites.net/');
         exit;
     } else {
         echo "Credenciales inválidas.";
