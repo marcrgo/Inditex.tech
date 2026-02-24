@@ -11,6 +11,22 @@
       background-color: #f4f4f4;
     }
 
+    .main-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .main-title a {
+      text-decoration: none;
+      color: #000;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .main-title a:hover {
+      color: #007bff;
+    }
+
     h1 {
       text-align: center;
     }
@@ -63,6 +79,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
+
+  <!-- Título principal con enlace -->
+  <div class="main-title">
+    <a href="https://marcrgo.github.io/Inditex.tech/descifrador.html">
+      Descifrador
+    </a>
+  </div>
+
   <h1>Descifrador AES</h1>
   <form id="decryptionForm">
     <label for="aesKey">Clave AES:</label>
@@ -157,7 +181,6 @@
     });
 
     document.getElementById('decodeBtn').addEventListener('click', function() {
-
       const decode = document.getElementById('base64').value;
       document.getElementById('result2').innerText = atob(decode);
     });
